@@ -12,7 +12,7 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('car-parts-sale')
 
 
-sale = SHEET.worksheet('sale')
+sales = SHEET.worksheet('sale')
 
-data = sale.get_all_values()
+data = sales.get_all_values()
 print(data)
