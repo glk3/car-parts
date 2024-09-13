@@ -52,7 +52,7 @@ def validate_data(values):
 
 def update_worksheet(data, worksheet):
     """
-    Updates the relevant worksheet with the provided data.
+    Updates the worksheet with the provided data.
     """
     print(f"Updating {worksheet} worksheet...\n")
     worksheet_to_update = SHEET.worksheet(worksheet)
