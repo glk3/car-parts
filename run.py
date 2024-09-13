@@ -86,6 +86,22 @@ def get_last_5_entries_sales():
 
     return columns
 
+def calculate_ordered_data(data):
+    """
+    Calculate new oredred data for each car part by averaging the last 5 sales
+    entries and adding 10%.
+    """
+    print("Calculating ordered data...\n")
+    new_ordered_data = []
+
+    for column in data:
+        int_column = [int(num) for num in column]
+        average = sum(int_column) / len(int_column)
+        ordered_num = average * 1.1 
+        new_ordered_data.append(round(ordered_num))
+
+    return new_ordered_data
+
 def main():
 
     data = get_sales_data()
@@ -94,6 +110,8 @@ def main():
     new_returned_data = calculate_returned_data(sales_data)
     update_worksheet(new_returned_data, "returned")
     sales_columns = get_last_5_entries_sales()
+    ordered_data = calculate_ordered_data(sales_columns)
+    update_worksheet(ordered_data, "ordered")
 
 
 print("Welcome to Car Parts Sale Data Management")
