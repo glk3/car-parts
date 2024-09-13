@@ -91,6 +91,10 @@ def main():
     data = get_sales_data()
     sales_data = [int(num) for num in data]
     update_worksheet(sales_data, "sales")
+    new_returned_data = calculate_returned_data(sales_data)
+    update_worksheet(new_returned_data, "returned")
+    sales_columns = get_last_5_entries_sales()
+
 
 print("Welcome to Car Parts Sale Data Management")
 main()
