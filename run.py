@@ -49,3 +49,35 @@ def validate_data(values):
         return False
 
     return True
+
+def update_worksheet(data, worksheet):
+    """
+    Updates the relevant worksheet with the provided data.
+    """
+    print(f"Updating {worksheet} worksheet...\n")
+    worksheet_to_update = SHEET.worksheet(worksheet)
+    worksheet_to_update.append_row(data)
+    print(f"{worksheet} worksheet updated successfully.\n")
+
+def calculate_returned_data(sales_row):
+    """
+    Compare sales with ordered and calculate the returned
+    """
+    print("Calculating returned data...\n")
+    ordered = SHEET.worksheet("ordered").get_all_values()
+    ordered_row = ordered[-1]
+    returned_data = []
+    for ordered, sales in zip(ordered_row, sales_row):
+        returned = int(ordered) - sales
+        returned_data.append(returned)
+
+    return returned_data
+
+def main():
+
+    data = get_sales_data()
+    sales_data = [int(num) for num in data]  # Convert input to integers
+    update_worksheet(sales_data, "sales")  # Update sales worksheet
+
+print("Welcome to Car Parts Sale Data Management")
+main()
