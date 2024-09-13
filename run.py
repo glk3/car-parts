@@ -73,11 +73,24 @@ def calculate_returned_data(sales_row):
 
     return returned_data
 
+def get_last_5_entries_sales():
+    """
+    Reads the last 5 entries of sales data for oil, oil filter, and tyres.
+    """
+    sales = SHEET.worksheet("sales")
+
+    columns = []
+    for ind in range(1, 4): 
+        column = sales.col_values(ind)
+        columns.append(column[-5:])
+
+    return columns
+
 def main():
 
     data = get_sales_data()
-    sales_data = [int(num) for num in data]  # Convert input to integers
-    update_worksheet(sales_data, "sales")  # Update sales worksheet
+    sales_data = [int(num) for num in data]
+    update_worksheet(sales_data, "sales")
 
 print("Welcome to Car Parts Sale Data Management")
 main()
