@@ -1,4 +1,3 @@
-
 import gspread
 from google.oauth2.service_account import Credentials
 
@@ -11,7 +10,7 @@ SCOPE = [
 CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
-SHEET = GSPREAD_CLIENT.open_by_key('1_wsutQEMeso8AFcV2-I9BJZfBTwSbN1P3jpc7tCIZ9w')
+SHEET = GSPREAD_CLIENT.open('car_parts_sale')
 
 
 def get_sales_data():
@@ -37,7 +36,7 @@ def get_sales_data():
 
 def validate_data(values):
     """
-    Validates that input data contains exactly 3 values are integers.
+    Validates that the input data contains exactly 3 values and that they are integers.
     """
     try:
         [int(value) for value in values]
@@ -49,14 +48,16 @@ def validate_data(values):
 
     return True
 
+
 def update_worksheet(data, worksheet):
     """
-    Updates the worksheet with the provided data.
+    Updates the relevant worksheet with the provided data.
     """
     print(f"Updating {worksheet} worksheet...\n")
     worksheet_to_update = SHEET.worksheet(worksheet)
     worksheet_to_update.append_row(data)
     print(f"{worksheet} worksheet updated successfully.\n")
+
 
 def calculate_returned_data(sales_row):
     """
@@ -72,18 +73,20 @@ def calculate_returned_data(sales_row):
 
     return returned_data
 
+
 def get_last_5_entries_sales():
     """
-    Reads the last 5 entries of sales data for oil, oil filter, and tyres.
+    Retrieves the last 5 entries of sales data for oil, oil filter, and tyres.
     """
     sales = SHEET.worksheet("sales")
 
     columns = []
-    for ind in range(1, 4): 
+    for ind in range(1, 4):  # Columns for oil, oil filter, tyres
         column = sales.col_values(ind)
-        columns.append(column[-5:])
+        columns.append(column[-5:])  # Get last 5 entries
 
     return columns
+
 
 def calculate_ordered_data(data):
     """
@@ -96,21 +99,24 @@ def calculate_ordered_data(data):
     for column in data:
         int_column = [int(num) for num in column]
         average = sum(int_column) / len(int_column)
-        ordered_num = average * 1.1 
+        ordered_num = average * 1.1  # Add 10%
         new_ordered_data.append(round(ordered_num))
 
     return new_ordered_data
 
-def main():
 
+def main():
+    """
+    Run all program functions for managing car parts sales.
+    """
     data = get_sales_data()
-    sales_data = [int(num) for num in data]
-    update_worksheet(sales_data, "sales")
+    sales_data = [int(num) for num in data]  # Convert input to integers
+    update_worksheet(sales_data, "sales")  # Update sales worksheet
     new_returned_data = calculate_returned_data(sales_data)
-    update_worksheet(new_returned_data, "returned")
-    sales_columns = get_last_5_entries_sales()
-    ordered_data = calculate_ordered_data(sales_columns)
-    update_worksheet(ordered_data, "ordered")
+    update_worksheet(new_returned_data, "returned")  # Update returned worksheet
+    sales_columns = get_last_5_entries_sales()  # Get recent sales
+    ordered_data = calculate_ordered_data(sales_columns)  # Calculate new odered
+    update_worksheet(ordered_data, "ordered")  # Update ordered worksheet
 
 
 print("Welcome to Car Parts Sale Data Management")
